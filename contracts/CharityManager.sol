@@ -24,7 +24,8 @@ contract CharityManager {
         _;
     }
 
-    mapping(address => uint256) public addressToDonatedTotal;
+    mapping(address => mapping(address => uint256))
+        public addressToDonatedTotal;
     struct Proposal {
         string proposalURL;
         uint256 amountNeeded;
@@ -33,13 +34,19 @@ contract CharityManager {
         address donateToAddress;
         bool matchingDonations;
         // Stores addresses of donors and their donated amounts
-        mapping(address => uint256) donations;
+        mapping(address => mapping(address => uint256)) donations;
         address[] matchingOrg;
+        // Keeps track of organization donations to the proposal
         mapping(address => uint256) orgActualDonated;
+        // Tracks each organizations balance left for matching to donors
         mapping(address => uint256) addressMatchingAmount;
+        // tracks which token did the organization sponsored
         mapping(address => address) orgToTokenSponsored;
+        // sets the minimum amount to be donated for a token
         mapping(address => uint256) tokenToMinimumDonation;
+        // ratio of donor matching
         mapping(address => uint256) addressMatchingRatio;
+        // token to minimum matching amount
         mapping(address => uint256) tokenToMinimumMatching;
     }
     mapping(uint256 => Proposal) public proposals;
@@ -167,9 +174,9 @@ contract CharityManager {
             rewardContractAddress.mint(msg.sender, _amount);
             proposal.donatedSoFar += _amount;
         }
-        proposal.donations[msg.sender] += _amount;
+        proposal.donations[msg.sender][_tokenChoice] += _amount;
 
-        addressToDonatedTotal[msg.sender] += _amount;
+        addressToDonatedTotal[msg.sender][_tokenChoice] += _amount;
     }
 
     // owner add proposal to contract
@@ -258,5 +265,35 @@ contract CharityManager {
         require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
         require(_minimumTokenRequired > 0, "Minimum must be more than 0!");
         proposal.tokenToMinimumMatching[_tokenContract] = _minimumTokenRequired;
+    }
+
+    function getDonorDonationOfSpecificToken(
+        address _addressToCheck,
+        address _tokenChoice
+    ) public view returns (uint256) {
+        return addressToDonatedTotal[_addressToCheck][_tokenChoice];
+    }
+
+    function checkDonorTokenContributionFromProposal(
+        uint256 _proposalId,
+        address _donorAddress,
+        address _tokenAddress
+    ) public view returns (uint256) {
+        require(
+            bytes(proposals[_proposalId].proposalURL).length > 0,
+            "Invalid proposal ID"
+        );
+        return proposals[_proposalId].donations[_donorAddress][_tokenAddress];
+    }
+
+    function checkOrganizationDonationsForProposal(
+        uint256 _proposalId,
+        address _organizationAddress
+    ) public view returns (uint256) {
+        require(
+            bytes(proposals[_proposalId].proposalURL).length > 0,
+            "Invalid proposal ID"
+        );
+        return proposals[_proposalId].orgActualDonated[_organizationAddress];
     }
 }
