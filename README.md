@@ -17,10 +17,15 @@ Problem Statement 1
 
 ### **Test Cases conducted on**
 Custom USDC on Mumbai Polygon:
-0xaB4004a8a97F8073C64f0452194De64874f29f22
+0x0f15cAb063A079dcCe51e6F49CC2F5BceD9Cb62E
+
+Custom XSGD on Mumbai Polygon:
+0xD1C964567E922fAC0565094Cf768d94411717C09
 
 Custom mintable Token to reward users on Mumbai Polygon:
-0x07a494f0e96B5da45A757813Ab5bFacc1a4120ed
+0xc67e48f00Af7BE6c02bBA4c812eb2bcCcAF5A012
 
 Charity Manager on Mumbai Polygon:
-0x64D0614Eb76b7AeeDEBF545FBa3395172EB6e375
+0xa23Ff5a0dDe0e31B55623f3c28319c7f8e5eDF81
+
+
