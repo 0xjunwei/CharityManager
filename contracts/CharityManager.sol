@@ -4,20 +4,21 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // Interface for the wrapped token contract
-interface WrappedToken {
+interface RewardToken {
     function mint(address to, uint256 amount) external;
 }
 
 contract CharityManager {
     address public immutable i_owner;
+    // future integration to accept more than 1 token
     IERC20 public tokenToAcceptAddress;
-    WrappedToken public wrappedContractAddress;
+    RewardToken public rewardContractAddress;
 
-    constructor(address _tokenToAccept, address _wrappedContractAddress) {
+    constructor(address _tokenToAccept, address _rewardContractAddress) {
         i_owner = msg.sender;
         proposalCount = 0;
         tokenToAcceptAddress = IERC20(_tokenToAccept);
-        wrappedContractAddress = WrappedToken(_wrappedContractAddress);
+        rewardContractAddress = RewardToken(_rewardContractAddress);
     }
 
     modifier onlyOwner() {
@@ -46,13 +47,21 @@ contract CharityManager {
     // Donating to contract and receive() to cover
     function donateWithChoice(uint256 _amount, uint256 _proposalId) public {
         /*Donates XSGD or USDC and receives a wrapped token 
-        that is only redeemable by contract owner */
+        that proof of how much each individual has donated
+
+        do not block donations over the target
+
+        block donations less than a dollar
+
+        dont allow proposal id that is non existent, by checking if proposal URL exists
+
+        */
         Proposal storage proposal = proposals[_proposalId];
         // Get the current timestamp in seconds since the Unix epoch.
         uint256 currentTime = block.timestamp;
         // Check if the current time exceeds the deadline
         require(
-            currentTime > proposal.deadline,
+            currentTime < proposal.deadline,
             "Proposal deadline has already passed"
         );
         // require minimum donation of a dollar
@@ -101,10 +110,11 @@ contract CharityManager {
                             proposal.matchingOrg[orgIndex]
                         ];
                         // getting user amount that i am matching to reduce
-                        uint256 deduct_amount_to_match = (org_match * 10000) /
+                        // Probably here getting error in calculation
+                        uint256 deduct_amount_to_match = (org_match /
                             proposal.addressMatchingRatio[
                                 proposal.matchingOrg[orgIndex]
-                            ];
+                            ]) * 10000;
                         _amount_to_match =
                             _amount_to_match -
                             deduct_amount_to_match;
@@ -128,14 +138,18 @@ contract CharityManager {
                     }
                 }
             }
-            _amount_to_match = _amount_to_match + _matched_by_org;
+            // clearing away since matching amt balance doesnt matter once i exit
+            _amount_to_match = _amount + _matched_by_org;
             // Mint the wrapped token to the user(msg.sender)
-            wrappedContractAddress.mint(msg.sender, _amount_to_match);
+            rewardContractAddress.mint(msg.sender, _amount_to_match);
+            proposal.donatedSoFar += _amount_to_match;
         } else {
             // Mint the wrapped token to the user(msg.sender)
-            wrappedContractAddress.mint(msg.sender, _amount);
+            rewardContractAddress.mint(msg.sender, _amount);
+            proposal.donatedSoFar += _amount;
         }
         proposal.donations[msg.sender] += _amount;
+
         addressToDonatedTotal[msg.sender] += _amount;
     }
 
@@ -174,11 +188,20 @@ contract CharityManager {
         require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
         // prevent 0 dollar matching, minimally $100 Matching
         require(_amountToMatch > 99999999, "Minimally $1 in matching");
-        require(_ratioToMatch > 10000, "Minimally 1:1 matching");
+        require(_ratioToMatch >= 10000, "Minimally 1:1 matching");
         // Check if addressMatchingAmount[msg.sender] has not been set
         require(
             proposal.addressMatchingAmount[msg.sender] == 0,
             "Matching amount already set"
+        );
+        // Transfer the specified amount of tokens from the sender to the contract
+        require(
+            tokenToAcceptAddress.transferFrom(
+                msg.sender,
+                address(proposal.donateToAddress),
+                _amountToMatch
+            ),
+            "Token transfer failed"
         );
         proposal.matchingOrg.push(msg.sender);
         proposal.matchingDonations = true;
