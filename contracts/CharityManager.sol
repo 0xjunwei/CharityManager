@@ -11,13 +11,11 @@ interface RewardToken {
 contract CharityManager {
     address public immutable i_owner;
     // future integration to accept more than 1 token
-    IERC20 public tokenToAcceptAddress;
     RewardToken public rewardContractAddress;
 
-    constructor(address _tokenToAccept, address _rewardContractAddress) {
+    constructor(address _rewardContractAddress) {
         i_owner = msg.sender;
         proposalCount = 0;
-        tokenToAcceptAddress = IERC20(_tokenToAccept);
         rewardContractAddress = RewardToken(_rewardContractAddress);
     }
 
@@ -39,13 +37,20 @@ contract CharityManager {
         address[] matchingOrg;
         mapping(address => uint256) orgActualDonated;
         mapping(address => uint256) addressMatchingAmount;
+        mapping(address => address) orgToTokenSponsored;
+        mapping(address => uint256) tokenToMinimumDonation;
         mapping(address => uint256) addressMatchingRatio;
+        mapping(address => uint256) tokenToMinimumMatching;
     }
     mapping(uint256 => Proposal) public proposals;
     uint256 public proposalCount;
 
     // Donating to contract and receive() to cover
-    function donateWithChoice(uint256 _amount, uint256 _proposalId) public {
+    function donateWithChoice(
+        uint256 _amount,
+        uint256 _proposalId,
+        address _tokenChoice
+    ) public {
         /*Donates XSGD or USDC and receives a wrapped token 
         that proof of how much each individual has donated
 
@@ -64,13 +69,23 @@ contract CharityManager {
             currentTime < proposal.deadline,
             "Proposal deadline has already passed"
         );
+        // checking if the token is allowed
+        require(
+            proposal.tokenToMinimumDonation[_tokenChoice] > 0,
+            "Invalid Token sent"
+        );
+
         // require minimum donation of a dollar
-        require(_amount > 999999, "Minimum donation is $1");
+        require(
+            _amount >= proposal.tokenToMinimumDonation[_tokenChoice],
+            "Minimum donation for token not met"
+        );
         // prevent proposal URL to be empty
         require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
+
         // Transfer the specified amount of tokens from the sender to the contract
         require(
-            tokenToAcceptAddress.transferFrom(
+            IERC20(_tokenChoice).transferFrom(
                 msg.sender,
                 address(proposal.donateToAddress),
                 _amount
@@ -86,10 +101,14 @@ contract CharityManager {
                 orgIndex < proposal.matchingOrg.length;
                 orgIndex++
             ) {
+                // Only give if same token tier
                 if (
                     proposal.addressMatchingAmount[
                         proposal.matchingOrg[orgIndex]
-                    ] > 0
+                    ] >
+                    0 &&
+                    _tokenChoice ==
+                    proposal.orgToTokenSponsored[proposal.matchingOrg[orgIndex]]
                 ) {
                     // Initialize variable
                     uint256 matchingAmount = 0;
@@ -175,11 +194,25 @@ contract CharityManager {
         newProposal.matchingDonations = false;
     }
 
+    // owner add token allowed for proposal
+    function addTokenWhitelistToProposal(
+        uint256 _proposalId,
+        address _tokenContract,
+        uint256 _minimumTokenRequired
+    ) public onlyOwner {
+        Proposal storage proposal = proposals[_proposalId];
+        // prevent proposal URL to be empty
+        require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
+        require(_minimumTokenRequired > 0, "Minimum must be more than 0!");
+        proposal.tokenToMinimumDonation[_tokenContract] = _minimumTokenRequired;
+    }
+
     // organization matching funds for specific cause
     function matchDonation(
         uint256 _proposalId,
         uint256 _amountToMatch,
-        uint256 _ratioToMatch
+        uint256 _ratioToMatch,
+        address _tokenChoice
     ) public {
         // _ratioToMatch in bips 10000 = 100% match rate 1:1
         // handle multiple organization matching, handle ratio checks to ensure no one matches more than proposed amount
@@ -187,7 +220,10 @@ contract CharityManager {
         // prevent proposal URL to be empty
         require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
         // prevent 0 dollar matching, minimally $100 Matching
-        require(_amountToMatch > 99999999, "Minimally $1 in matching");
+        require(
+            _amountToMatch >= proposal.tokenToMinimumMatching[_tokenChoice],
+            "Minimum matching donation amount not met"
+        );
         require(_ratioToMatch >= 10000, "Minimally 1:1 matching");
         // Check if addressMatchingAmount[msg.sender] has not been set
         require(
@@ -196,7 +232,7 @@ contract CharityManager {
         );
         // Transfer the specified amount of tokens from the sender to the contract
         require(
-            tokenToAcceptAddress.transferFrom(
+            IERC20(_tokenChoice).transferFrom(
                 msg.sender,
                 address(proposal.donateToAddress),
                 _amountToMatch
@@ -205,8 +241,22 @@ contract CharityManager {
         );
         proposal.matchingOrg.push(msg.sender);
         proposal.matchingDonations = true;
+        proposal.orgToTokenSponsored[msg.sender] = _tokenChoice;
         proposal.addressMatchingAmount[msg.sender] = _amountToMatch;
         proposal.orgActualDonated[msg.sender] = _amountToMatch;
         proposal.addressMatchingRatio[msg.sender] = _ratioToMatch;
+    }
+
+    // owner add token allowed for proposal
+    function addTokenMatchingMinimum(
+        uint256 _proposalId,
+        address _tokenContract,
+        uint256 _minimumTokenRequired
+    ) public onlyOwner {
+        Proposal storage proposal = proposals[_proposalId];
+        // prevent proposal URL to be empty
+        require(bytes(proposal.proposalURL).length > 0, "Invalid proposal ID");
+        require(_minimumTokenRequired > 0, "Minimum must be more than 0!");
+        proposal.tokenToMinimumMatching[_tokenContract] = _minimumTokenRequired;
     }
 }

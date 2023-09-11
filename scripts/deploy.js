@@ -5,20 +5,38 @@ const { ethers, run } = require("hardhat");
 async function main() {
   // getting a custom ERC20 contract factory using ethers
   const erc20 = await ethers.getContractFactory("CustomERC20");
-  console.log("Deploying erc20 contract...");
+  console.log("Deploying USDC erc20 contract...");
   // deploying the contract
   const initialSupply = ethers.parseUnits("1000000", 6); // Adjust the initial supply as needed
   const erc20Contract = await erc20.deploy(initialSupply);
 
   // Wait for the deployment transaction to be mined
   await erc20Contract.waitForDeployment(); // Use .deployed() to get the deployed contract instance
-  console.log("ERC20 Contract deployed!");
+  console.log("USDC ERC20 Contract deployed!");
   const erc20ContractAddress = await erc20Contract.getAddress();
   console.log(`Deployed contract address: ${erc20ContractAddress}`);
   await erc20Contract.deploymentTransaction().wait(8);
   await verify(`contracts/CustomERC20.sol:CustomERC20`, erc20ContractAddress, [
     initialSupply,
   ]);
+
+  // getting a custom ERC20 contract factory using ethers
+  const xsgd_erc20 = await ethers.getContractFactory("XSGDcustom");
+  console.log("Deploying XSGD erc20 contract...");
+  // deploying the contract
+  const xsgdErc20Contract = await xsgd_erc20.deploy(initialSupply);
+
+  // Wait for the deployment transaction to be mined
+  await xsgdErc20Contract.waitForDeployment(); // Use .deployed() to get the deployed contract instance
+  console.log("ERC20 Contract deployed!");
+  const xsgdErc20ContractAddress = await xsgdErc20Contract.getAddress();
+  console.log(`Deployed contract address: ${xsgdErc20ContractAddress}`);
+  await xsgdErc20Contract.deploymentTransaction().wait(8);
+  await verify(
+    `contracts/XSGDcustom.sol:XSGDcustom`,
+    xsgdErc20ContractAddress,
+    [initialSupply]
+  );
 
   const rewardToken = await ethers.getContractFactory(
     "contracts/RewardToken.sol:RewardToken"
@@ -32,7 +50,7 @@ async function main() {
     `Deployed reward contract address: ${rewardTokenContractAddress}`
   );
 
-  await rewardTokenContract.deploymentTransaction().wait(6);
+  await rewardTokenContract.deploymentTransaction().wait(8);
   await verify(
     "contracts/RewardToken.sol:RewardToken",
     rewardTokenContractAddress,
@@ -43,7 +61,6 @@ async function main() {
   const charityManager = await ethers.getContractFactory("CharityManager");
   console.log("Deploying charity manager");
   const charityContract = await charityManager.deploy(
-    erc20Contract.getAddress(),
     rewardTokenContract.getAddress()
   );
   await charityContract.waitForDeployment();
@@ -53,11 +70,11 @@ async function main() {
     `Deployed charity contract address: ${charityManagerContractAddress}`
   );
 
-  await charityContract.deploymentTransaction().wait(6);
+  await charityContract.deploymentTransaction().wait(8);
   await verify(
     `contracts/CharityManager.sol:CharityManager`,
     charityManagerContractAddress,
-    [erc20ContractAddress, rewardTokenContractAddress]
+    [rewardTokenContractAddress]
   );
 
   // Passing ownership of mintable to charity manager
