@@ -14,3 +14,13 @@ Problem Statement 1
 - Charities input programs to attract funding
 - Ensure credibility of charities - transparency of transactions
 - Accurate Donor Matching
+
+### **Test Cases conducted on**
+Custom USDC on Mumbai Polygon:
+0xaB4004a8a97F8073C64f0452194De64874f29f22
+
+Custom mintable Token to reward users on Mumbai Polygon:
+0x07a494f0e96B5da45A757813Ab5bFacc1a4120ed
+
+Charity Manager on Mumbai Polygon:
+0x64D0614Eb76b7AeeDEBF545FBa3395172EB6e375
