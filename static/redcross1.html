@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>GWGB-Red Cross Singapore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+  <meta content="Themesdesign" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
+
+  <!-- plugin css -->
+  <link href="assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+
+  <!-- Bootstrap Css -->
+  <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+  <!-- Icons Css -->
+  <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+  <!-- App Css-->
+  <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+</head>
+
+<body data-layout="horizontal" data-topbar="dark">
+  <!-- Begin page -->
+  <div id="layout-wrapper">
+    <header id="page-topbar" class="isvertical-topbar">
+      <div class="navbar-header">
+        <div class="d-flex">
+          <!-- start page title -->
+          <div class="page-title-box align-self-center d-none d-md-block">
+            <h4 class="page-title mb-0">GWGB</h4>
+          </div>
+          <div class="page-title-box align-self-center d-none d-md-block">
+            <a href="index.html" class="page-title mb-0">Proposals</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- ========== Left Sidebar Start ========== -->
+
+    <!-- Left Sidebar End -->
+    <header class="ishorizontal-topbar">
+      <div class="navbar-header">
+        <div class="d-flex">
+          <!-- start page title -->
+          <div class="page-title-box align-self-center d-none d-md-block">
+            <h4 class="page-title mb-0">GWGB</h4>
+          </div>
+          <div class="page-title-box align-self-center d-none d-md-block">
+            <a href="index.html" class="page-title mb-0">Proposals</a>
+          </div>
+        </div>
+        <div class="d-flex">
+          <!-- Metamask Button -->
+          <!-- Check if metamask is installed and if yes, login and get user address -->
+          <!-- Also prep to interface with CharityManager contract-->
+          <button type="button" id='myButton' class="btn header-item" style="color: #f8f9fb;" onclick="connectMetamask()">
+            <img class="header-lang-img" src="assets/images/MetaMask_Fox.png" alt="Connect to Metamask" height="18" />
+            Connect Your Wallet
+          </button>
+          <p id="accountArea" style="color:#f8f9fb;"></p>
+          <!-- end page title -->
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+      <div class="page-content">
+        <div class="container-fluid">
+          <!-- end row -->
+
+          <div class="card">
+            <div class="card-body">
+              <!-- Hide ID Label-->
+              <label style="display: none;" id="proposalId">1</label>
+              <h2>Red Cross Singapore</h2>
+            </div>
+          </div>
+          <!--  -->
+          <div class="row">
+            <div class="col-xxl-8">
+              <form> <!-- donation form-->
+                <div class="card">
+                  <div class="card-body">
+                    <table class="table">
+                      <tr>
+                        <td class="d-none d-md-block">
+                          <img src="assets/images/donationImages/redcross_logo.png" alt=""
+                            class="avatar-xl rounded-circle img-thumbnail" />
+                        </td>
+                        <td>
+                          <div class="text">
+                            <h5 class="mb-1">Help Purchase Study Materials For Kids In Need</h5>
+                            <p>
+                              Make a significant impact on the educational future of underprivileged children in
+                              Singapore by contributing to this initiative.
+                            </p>
+                            <p>Your donation will be used to purchase study materials and resources, ensuring that every
+                              child has access to quality education. </p>
+                            <p>Join hands with Red Cross Singapore and help bridge the educational gap for kids in need,
+                              giving them the tools to build a brighter future.</p>
+                            <p>Donate today and be a part of this transformative journey.</p>
+                            <div class="col-md-6">
+                              <div class="form-floating mb-3">
+                                  <select class="form-select" id="tokenAddress" aria-label="Floating label select example">
+                                      <option selected="">Choose Token</option>
+                                      <option value="0xbE00A68C2fa82E39b27933464261E5a55A36fE4F">USDC</option>
+                                      <option value="0xD27Fa8D3C51EDa3F78233dBEa36058c9E77D4139">XSGD</option>
+                                  </select>
+                                  <label for="floatingSelectGrid"> USDC / XSGD</label>
+                              </div>
+                              <div class="form-floating mb-3">
+                                <input type="number" class="form-control" min="1" id="donateVal"
+                                  aria-label="Floating label select example" required>
+                                <label for="donateVal">Enter Amount to Donate</label>
+                              </div>
+                              <p id="txStatus"></p>
+                            </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="card-footer text-end">
+                    <button type="button" class="btn btn-primary w-md" onclick="sendDonation()">Donate</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="col-xxl-4">
+              <div class="card d-none d-md-block">
+                <div class="card-body">
+                  <div>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar">
+                        <div class="avatar-title rounded bg-soft-primary">
+                          <i class="bx bx-check-shield font-size-24 mb-0 text-primary"></i>
+                        </div>
+                      </div>
+
+                      <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0 font-size-15">Information</h6>
+                        <span class="badge rounded-pill bg-success">Active</span>
+                      </div>
+
+                    </div>
+
+                    <div>
+                      <h4 class="mt-4 pt-1 mb-0 font-size-22"></h4>
+
+                      <div class="mt-1 align-items-end overflow-hidden">
+                        <div class="d-flex align-items-center mt-sm-0 mt-2">
+                          <div class="flex-grow-1 ms-2 overflow-hidden">
+                            <p class="font-size-15 mb-1 text-truncate">Start Date:</p>
+                          </div>
+                          <div class="flex-shrink-0 ms-2">
+                            <span class="fw-bold" id="currentDate"></span>
+                          </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-sm-0 mt-2">
+                          <div class="flex-grow-1 ms-2 overflow-hidden">
+                            <p class="font-size-15 mb-1 text-truncate">End Date:</p>
+                          </div>
+                          <div class="flex-shrink-0 ms-2">
+                            <span class="fw-bold" id="endDate"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- matching donation -->
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap align-items-center mb-3">
+                    <h5 class="card-title me-2">Your Donations Will Be Matched By:</h5>
+                    <div class="ms-auto">
+
+                    </div>
+                  </div>
+                  <div class="mx-n4 px-4" data-simplebar="init" style="max-height: 332px">
+                    <div class="simplebar-wrapper" style="margin: 0px -24px;">
+                      <div class="simplebar-height-auto-observer-wrapper">
+                        <div class="simplebar-height-auto-observer"></div>
+                      </div>
+                      <div class="simplebar-mask">
+                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                          <div class="simplebar-content-wrapper"
+                            style="height: auto; padding-right: 0px; padding-bottom: 0px; overflow: hidden;">
+                            <div class="simplebar-content" style="padding: 0px 24px;">
+                              <div class="table-responsive">
+                                <table
+                                  class="table table-striped table-centered align-middle table-nowrap mb-0 table-check">
+                                  <tbody>
+                                    <tr>
+                                      <td style="width: 190px">
+                                        <div class="d-flex align-items-center">
+                                          <img class="rounded-circle avatar-sm"
+                                            src="assets/images/donationImages/dbsBank.jpg" alt="">
+                                          <div class="flex-grow-1 ms-3">
+                                            DBS Bank
+                                            <p> 1: <span id="ratioVal">1</span> ratio</p>
+                                          </div>
+                                          <p>$<span id="outputVal1">0</span></p>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="simplebar-placeholder" style="width: auto; height: 181px;"></div>
+                  </div>
+                  <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                    <div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); display: none;">
+                    </div>
+                  </div>
+                  <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+                    <div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); display: none;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end row -->
+
+        <!-- end row -->
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+    <footer class="footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            © webadmin.
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end d-none d-sm-block">
+              Crafted with <i class="mdi mdi-heart text-danger"></i> by
+              <a href="https://Themesdesign.com/" target="_blank" class="text-reset">Themesdesign</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- end main content-->
+  </div>
+  <!-- END layout-wrapper -->
+
+  <!-- Right Sidebar -->
+
+  <!-- JAVASCRIPT -->
+  <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/libs/metismenujs/metismenujs.min.js"></script>
+  <script src="assets/libs/simplebar/simplebar.min.js"></script>
+  <script src="assets/libs/eva-icons/eva.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.0/web3.min.js"></script>
+  <script src="ABI.js"></script>
+  <script src="date.js"></script>
+  <script src="gwgbScripts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- script for endDate-->
+  <script>
+    // Get the current date
+    const currentDateEnd = new Date();
+
+    // Define the number of days to add
+    const daysToAdd = 3;
+
+    // Calculate the new date by adding the specified number of days
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + daysToAdd);
+
+    // Format the new date as desired (e.g., "Month Day, Year")
+    const optionsEnd = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDateEnd = newDate.toLocaleDateString('en-US', options);
+
+    // Update the HTML element with the new date
+    const endDateElement = document.getElementById('endDate');
+    endDateElement.textContent = formattedDateEnd;
+
+    // Ratio for the banks
+    // Get references to the input and output elements
+    var inputElement = document.getElementById('donateVal');
+    var outputElement = document.getElementById('outputVal1');
+
+    // Add an input event listener to the input element
+    inputElement.addEventListener('input', function () {
+      // get float and get the value based on the ratio from the banks
+      var toNumber = inputElement.valueAsNumber;
+      var ratio = document.getElementById('ratioVal');
+      var finalVal = toNumber * parseFloat(ratio.innerText);
+
+      // Check if the input is a valid number
+      if (!isNaN(finalVal)) {
+        // Update the text of the output element with the result
+        outputElement.textContent = finalVal.toFixed(2); // Displaying result with 2 decimal places
+      } else {
+        // Display 0 if NaN
+        outputElement.textContent = "0";
+      }
+    });
+
+
+
+
+  </script>
+
+  <!-- apexcharts -->
+  <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+  <!-- ckeditor5 -->
+  <script src="assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+  <!-- Vector map-->
+  <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+  <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+
+  <script src="assets/js/pages/dashboard.init.js"></script>
+
+  <script src="assets/js/app.js"></script>
+
+
+
+
+  <!-- init js -->
+  <script src="assets/js/pages/form-editor.init.js"></script>
+
+  <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>GWGB-Create Proposal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesdesign" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <!-- plugin css -->
+    <link href="assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Bootstrap Css -->
+    <link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body data-layout="horizontal" data-topbar="dark">
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        <header id="page-topbar" class="isvertical-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- start page title -->
+                    <div class="page-title-box align-self-center d-none d-md-block">
+                        <h4 class="page-title mb-0">GWGB</h4>
+                    </div>
+                    <div class="page-title-box align-self-center d-none d-md-block">
+                        <a href="index.html" class="page-title mb-0">Proposals</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ========== Left Sidebar Start ========== -->
+
+        <!-- Left Sidebar End -->
+        <header class="ishorizontal-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- start page title -->
+                    <div class="page-title-box align-self-center d-none d-md-block">
+                        <h4 class="page-title mb-0">GWGB</h4>
+                    </div>
+                    <div class="page-title-box align-self-center d-none d-md-block">
+                        <a href="index.html" class="page-title mb-0">Proposals</a>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <!-- Metamask Button -->
+                    <!-- Check if metamask is installed and if yes, login and get user address -->
+                    <!-- Also prep to interface with CharityManager contract-->
+                    <button type="button" id='myButton' class="btn header-item" style="color: #f8f9fb;" onclick="connectMetamask()">
+                      <img class="header-lang-img" src="assets/images/MetaMask_Fox.png" alt="Connect to Metamask" height="18" />
+                      Connect Your Wallet
+                    </button>
+                    <p id="accountArea" style="color:#f8f9fb;"></p>
+                    <!-- end page title -->
+                  </div>
+            </div>
+        </header>
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Create Proposal</h2>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <!-- generate input group in the card body with title, body and submit button-->
+                            <div class="row">
+                                <form id="proposalForm">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="proposalTitle"
+                                            placeholder="Enter Name">
+                                        <label for="proposalTitle">Title </label>
+                                    </div>
+
+
+                                    <div class="form-floating mb-3">
+                                        <textarea name="proposalDesc1" id="proposalDesc" class="form-control" cols="30"
+                                            style="height: 200px;" rows="10"></textarea>
+
+                                        <label for="proposalDesc1">Description</label>
+
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="proposalAddr"
+                                            placeholder="Enter Name">
+                                        <label for="proposalAddr">Donation Address</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="proposalNeeded"
+                                            placeholder="Enter Amount Needed">
+                                        <label for="proposalNeeded">Amount Needed($USD)</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="proposalDuration"
+                                            placeholder="Enter Name" min="1">
+                                        <label for="proposalDuration">No. of Days</label>
+                                        <div class="flex-grow-1 ms-2 overflow-hidden">
+                                            <p class="font-size-15 mb-1 text-truncate">End Date:</p>
+                                        </div>
+                                        <div class="flex-shrink-0 ms-2">
+                                            <span class="fw-bold" id="endDate"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" id="floatingSelectGrid"
+                                                aria-label="Floating label select example">
+                                                <option selected="">Open this select menu</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                            <label for="floatingSelectGrid">Works with selects</label>
+                                        </div>
+                                    </div> -->
+
+
+                                    <!-- <div class="mb-3">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="floatingCheck">
+                                            <label class="form-check-label" for="floatingCheck">
+                                                Check me out
+                                            </label>
+                                        </div>
+                                    </div> -->
+                                    <div>
+                                        <button type="button" class="btn btn-primary w-md"
+                                            onclick="createProposal()">Submit</button>
+                                    </div>
+                                </form>
+                                <p id = "proposalProof"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> © webadmin.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                Crafted with <i class="mdi mdi-heart text-danger"></i> by <a
+                                    href="https://Themesdesign.com/" target="_blank" class="text-reset">Themesdesign</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+
+    <!-- Right Sidebar -->
+
+
+
+    <!-- JAVASCRIPT -->
+  <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/libs/metismenujs/metismenujs.min.js"></script>
+  <script src="assets/libs/simplebar/simplebar.min.js"></script>
+  <script src="assets/libs/eva-icons/eva.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.0/web3.min.js"></script>
+  <script src="ABI.js"></script>
+  <script src="date.js"></script>
+  <script src="gwgbScripts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/8.0.2/bignumber.js" integrity="sha512-XQDG6H87RgMf+aNFwDPCUcFwUf3t9liyqN/2BkJ8KGixupbjPwQHNhypNA972mLIkg4KPo4lkGmqAf3yfDz8hw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        // Get input and output id
+        var inputElement = document.getElementById('proposalDuration');
+        var endDateElement = document.getElementById('endDate');
+
+        // Get the current date
+        const currentDateEnd = new Date();
+
+        inputElement.addEventListener('input', function () {
+            // Define the number of days to add
+            var daysToAdd = parseInt(inputElement.value);
+
+            // Calculate the new date by adding the specified number of days
+            const newDate = new Date(currentDate);
+            newDate.setDate(currentDate.getDate() + daysToAdd);
+
+            // Format the new date as desired (e.g., "Month Day, Year")
+            const optionsEnd = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDateEnd = newDate.toLocaleDateString('en-US', options);
+
+            if (!isNaN(newDate)) {
+                // Update the HTML element with the new date
+                endDateElement.textContent = formattedDateEnd;
+            } else {
+                endDateElement.textContent = "";
+            }
+        });
+
+
+    </script>
+
+    <!-- apexcharts -->
+    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+    <!-- Vector map-->
+    <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+    <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+
+    <script src="assets/js/pages/dashboard.init.js"></script>
+
+    <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>
