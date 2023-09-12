@@ -38,4 +38,15 @@ Charity Manager on Mumbai Polygon:
 0xF63f9e1adc2ba9B3BE16D0aE12506400f7A6c4a1
 https://mumbai.polygonscan.com/address/0xf63f9e1adc2ba9b3be16d0ae12506400f7a6c4a1
 
+Taiko Contracts:
+USDC ERC20 on Taiko Testnet:
+0xefeAF2DeeEa14fb35c0b628EC1d491Cf99B5449E
 
+XSGD ERC20 on Taiko testnet:
+0xefeAF2DeeEa14fb35c0b628EC1d491Cf99B5449E
+
+Reward token on Taiko Testnet:
+0x42525040716Abb1b66f9963259C9FB62cC7A8aeF
+
+Charity Manager on Taiko Testnet:
+0x452e701045946044F4Cb8a7c312e57d991e7BA7c
