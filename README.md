@@ -15,6 +15,12 @@ Problem Statement 1
 - Ensure credibility of charities - transparency of transactions
 - Accurate Donor Matching
 
+Local copy can be accessed by going to the static folder and running:
+python3 -m http.server
+
+then accessing "127.0.0.1:8000" via your browser with metamask
+
+
 ### **Test Cases conducted on**
 Custom USDC on Mumbai Polygon:
 0xbE00A68C2fa82E39b27933464261E5a55A36fE4F
