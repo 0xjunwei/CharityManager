@@ -1,5 +1,5 @@
 # CharityManager
-Ethereum Singapore 2023 Hackathon
+Ethereum Singapore 2023 Hackathon - Project won ETHSingapore 2023 Quadratic Funding track for problem 1
 
 Problem Statement 1
 ### How can we establish a platform where charities can input their programs for precise donor matching, while also enabling donors to review charities' track records to build credibility and trust in their donations?
